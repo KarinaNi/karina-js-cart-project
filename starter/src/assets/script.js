@@ -77,8 +77,11 @@ function increaseQuantity(productId){
 */
 function decreaseQuantity(productId){
   const product = products2[productId];
-  product.quantity-=1;
-  if (product.quantity ==0) cart.pop(product);
+  if (product.quantity === 0) {
+    const index = cart.indexOf(product);
+    if (index > -1) cart.splice(index, 1);
+  }
+
 
 }
 
@@ -90,9 +93,12 @@ function decreaseQuantity(productId){
 
 function removeProductFromCart(productId){
   const product = products2[productId];
-  cart.pop(product);
+  const index = cart.indexOf(product);
+  if (index > -1) cart.splice(index, 1);
   product.quantity = 0;
 }
+
+
 /* Create a function named cartTotal that has no parameters
   - cartTotal should iterate through the cart to get the total cost of all products2
   - cartTotal should return the total cost of the products in the cart
