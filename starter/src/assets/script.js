@@ -8,38 +8,12 @@
    - productId: unique id for the product (number)
    - image: picture of product (url string)
 */
+let totalPaid = 0;
 
-let cherry = {
-  name: "Carton Of Cherries",
-  price: 4, 
-  quantity: 0,
-  productId: 1,
-  image: "images/cherry.jpg",
-}
-
-let strawberry={
-  name: "Carton of Strawberries",
-  price: 5,
-  quantity: 0,
-  productId: 2,
-  image: "images/strawberry.jpg",
-}
-
-let orange = {
-  name: "Carton of Oranges",
-  price: 10,
-  quantity: 0,
-  productId: 3,
-  image: "images/orange.jpg",
-}
-let products = [cherry, strawberry, orange];
-
-
-let products2 = {
-  1: cherry,
-  2: strawberry,
-  3: orange
-};
+let products = [{name:'Box of Cherries', price:4, quantity:0, productId: 1, image:'/images/cherry.jpg'}, 
+                {name:'Box of Strawberries', price:5, quantity:0, productId: 2, image:'/images/strawberry.jpg'},
+                {name:'Box of Oranges', price:10, quantity:0, productId: 3, image:'/images/orange.jpg'}
+];
 
 /* Images provided in /images folder. All images from Unsplash.com
    - cherry.jpg by Mae Mu
@@ -55,7 +29,7 @@ let cart = [];
   - if the product is not already in the cart, add it to the cart
 */
 function addProductToCart(productId){
-  const product = products2[productId];
+  const product = products.find(p=> p.productId === productId);
   if (!cart.includes(product)) cart.push(product);
   product.quantity+=1;
 
@@ -65,7 +39,7 @@ function addProductToCart(productId){
   - increaseQuantity should then increase the product's quantity
 */
 function increaseQuantity(productId){
-  const product = products2[productId];
+  const product = products.find(p=> p.productId === productId);
   product.quantity+=1;
 
 }
@@ -76,14 +50,16 @@ function increaseQuantity(productId){
   - if the function decreases the quantity to 0, the product is removed from the cart
 */
 function decreaseQuantity(productId){
-  const product = products2[productId];
-  if (product.quantity === 0) {
-    const index = cart.indexOf(product);
-    if (index > -1) cart.splice(index, 1);
+  const product = products.find(p=> p.productId === productId);
+  if (product.quantity > 0) {
+    product.quantity -= 1;
+    if (product.quantity === 0) {
+      const index = cart.indexOf(product);
+      if (index > -1) cart.splice(index, 1);
+    }
   }
-
-
 }
+
 
 /* Create a function named removeProductFromCart that takes in the productId as an argument
   - removeProductFromCart should get the correct product based on the productId
@@ -92,7 +68,7 @@ function decreaseQuantity(productId){
 */
 
 function removeProductFromCart(productId){
-  const product = products2[productId];
+  const product = products.find(p=> p.productId === productId);
   const index = cart.indexOf(product);
   if (index > -1) cart.splice(index, 1);
   product.quantity = 0;
@@ -104,11 +80,10 @@ function removeProductFromCart(productId){
   - cartTotal should return the total cost of the products in the cart
   Hint: price and quantity can be used to determine total cost
 */
-
-function cartTotal(){
-  let total = 0 
-  for (const product of cart){
-    total = total + product.quantity*product.price; 
+function cartTotal() {
+  let total = 0;
+  for (const product of cart) {
+    total += product.quantity * product.price;
   }
   return total;
 }
@@ -116,6 +91,7 @@ function cartTotal(){
 /* Create a function called emptyCart that empties the products from the cart */
 function emptyCart(){
   cart = [];
+  totalPaid =0;
 }
 /* Create a function named pay that takes in an amount as an argument
   - amount is the money paid by customer
@@ -123,14 +99,11 @@ function emptyCart(){
   - pay will return a positive number if money should be returned to customer
   Hint: cartTotal function gives us cost of all the products in the cart  
 */
-function pay(amount){
-  const total = cartTotal();
-  // call cart total
-  return amount - total;
-  // return cart total - amount
 
+function pay(amount) {
+  totalPaid += amount;
+  return cartTotal() - totalPaid; // returns change if positive, or amount owed if negative
 }
-
 
 
 /* Place stand out suggestions here (stand out suggestions can be found at the bottom of the project rubric.)*/
